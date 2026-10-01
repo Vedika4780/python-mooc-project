@@ -1,0 +1,41 @@
+def hanoi_solver(n):
+    # Initialize the three rods: source (A), auxiliary (B), and target (C)
+    # The source rod starts with all disks piled in decreasing size order
+    A = list(range(n, 0, -1))
+    B = []
+    C = []
+    
+    # Store the tracking list of historical board states as formatted strings
+    history = []
+    
+    def log_current_state():
+        # Captures the state of rods in the precise string format: [3, 2, 1] [] []
+        state_str = f"{A} {B} {C}"
+        history.append(state_str)
+        
+    def move_disks(disks_count, source, target, auxiliary):
+        if disks_count == 1:
+            # Base Case: Move the single topmost disk to the destination rod
+            target.append(source.pop())
+            log_current_state()
+            return
+            
+        # Recursive Step 1: Move top n-1 disks from source to auxiliary rod
+        move_disks(disks_count - 1, source, auxiliary, target)
+        
+        # Recursive Step 2: Move the remaining largest disk from source to target rod
+        target.append(source.pop())
+        log_current_state()
+        
+        # Recursive Step 3: Move the n-1 disks from auxiliary back to target rod
+        move_disks(disks_count - 1, auxiliary, target, source)
+
+    # 1. Log the starting board arrangement before any moves are performed
+    log_current_state()
+    
+    # 2. Trigger the core recursive engine to calculate step displacements
+    move_disks(n, A, C, B)
+    
+    # 3. Join all states together with newlines
+    return "\n".join(history)
+
