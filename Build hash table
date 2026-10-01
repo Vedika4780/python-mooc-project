@@ -1,0 +1,40 @@
+class HashTable:
+    def __init__(self):
+        # 1. Initialize collection attribute to an empty dictionary
+        self.collection = {}
+
+    def hash(self, string):
+        # Calculate the sum of Unicode (ASCII) values of each character
+        return sum(ord(char) for char in string)
+
+    def add(self, key, value):
+        # Compute the index via hashing function
+        hash_key = self.hash(key)
+        
+        # If the hash slot doesn't exist, create an empty nested dictionary
+        if hash_key not in self.collection:
+            self.collection[hash_key] = {}
+            
+        # Store or update the key-value pair under the specific hash slot
+        self.collection[hash_key][key] = value
+
+    def remove(self, key):
+        hash_key = self.hash(key)
+        
+        # Check if the hash index and the specific key exist to prevent errors
+        if hash_key in self.collection and key in self.collection[hash_key]:
+            del self.collection[hash_key][key]
+            
+            # Optional: Clean up the slot if it becomes completely empty
+            if not self.collection[hash_key]:
+                del self.collection[hash_key]
+
+    def lookup(self, key):
+        hash_key = self.hash(key)
+        
+        # If the index exists and the specific key is present, return its value
+        if hash_key in self.collection and key in self.collection[hash_key]:
+            return self.collection[hash_key][key]
+            
+        # Default fallback for missing elements
+        return None
